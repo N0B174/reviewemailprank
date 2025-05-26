@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>Fake Outlook Email Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f3f6fb;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+    label {
+      margin-top: 12px;
+      font-weight: 600;
+      display: block;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+    }
+    .row { margin-top: 15px; }
+    .radio-group { margin-top: 8px; }
+    .radio-group input { margin-right: 5px; }
+    button {
+      margin-top: 20px;
+      background: #0078d4;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>ইমেইল ইনপুট ফর্ম</h2>
+    <form id="emailForm" target="_blank">
+      <label>Receiver Email:</label>
+      <input type="email" name="receiver" required>
+
+      <label>Sender Email:</label>
+      <input type="email" name="sender" required>
+
+      <label>Subject:</label>
+      <input type="text" name="subject" required>
+
+      <label>Email Body:</label>
+      <textarea name="content" rows="5" required></textarea>
+
+      <label>Attachment Filename (optional):</label>
+      <input type="text" name="attachment" placeholder="example.pdf, photo.jpg">
+
+      <label>Is this a reply to another email?</label>
+      <select name="isReply">
+        <option value="no" selected>না</option>
+        <option value="yes">হ্যাঁ</option>
+      </select>
+
+      <div class="row" id="replyBlock" style="display:none;">
+        <label>Original Email (for reply):</label>
+        <textarea name="originalEmail" rows="4" placeholder="পুরোনো ইমেইল লিখো"></textarea>
+      </div>
+
+      <label>Time Option:</label>
+      <div class="radio-group">
+        <input type="radio" name="timeType" value="now" checked> এখনকার সময়
+        <input type="radio" name="timeType" value="custom"> কাস্টম সময়
+      </div>
+      <input type="datetime-local" name="customTime" id="customTime" disabled>
+
+      <button type="submit">সাবমিট</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("emailForm");
+    const replySelect = form.elements["isReply"];
+    const replyBlock = document.getElementById("replyBlock");
+    const timeRadios = form.elements["timeType"];
+    const customTimeInput = document.getElementById("customTime");
+
+    replySelect.addEventListener("change", () => {
+      replyBlock.style.display = replySelect.value === "yes" ? "block" : "none";
+    });
+
+    for (let radio of timeRadios) {
+      radio.addEventListener("change", () => {
+        customTimeInput.disabled = radio.value !== "custom";
+      });
+    }
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      const data = new FormData(form);
+      const params = new URLSearchParams();
+
+      for (let [key, value] of data.entries()) {
+        params.append(key, value);
+      }
+
+      window.open("email.html?" + params.toString(), "_blank");
+    });
+  </script>
+</body>
+</html>
