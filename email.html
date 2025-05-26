@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>ইমেইল</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e6ecf5;
+      margin: 0;
+      padding: 40px;
+    }
+    .email-window {
+      max-width: 700px;
+      background: white;
+      padding: 25px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    .meta {
+      color: #444;
+      margin-bottom: 10px;
+    }
+    .subject {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .content {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #111;
+    }
+    .attachment {
+      margin-top: 20px;
+      padding: 10px;
+      background: #f2f2f2;
+      border-left: 4px solid #0078d4;
+      font-size: 14px;
+      color: #333;
+    }
+    .reply-box {
+      margin-top: 30px;
+      background: #f9f9f9;
+      padding: 15px;
+      border-left: 4px solid #ccc;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-window">
+    <div class="meta"><strong>To:</strong> <span id="receiver"></span></div>
+    <div class="meta"><strong>From:</strong> <span id="sender"></span></div>
+    <div class="meta"><strong>Time:</strong> <span id="time"></span></div>
+
+    <div class="subject" id="subject"></div>
+    
+    <div id="replyBox" class="reply-box" style="display:none;"></div>
+
+    <div class="content" id="content"></div>
+
+    <div class="attachment" id="attachment" style="display:none;">
+      <strong>Attachment:</strong> <span id="attachmentName"></span>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const receiver = params.get("receiver");
+    const sender = params.get("sender");
+    const subject = params.get("subject");
+    const content = params.get("content");
+    const attachment = params.get("attachment");
+    const timeType = params.get("timeType");
+    const customTime = params.get("customTime");
+    const isReply = params.get("isReply");
+    const originalEmail = params.get("originalEmail");
+
+    document.getElementById("receiver").textContent = receiver;
+    document.getElementById("sender").textContent = sender;
+    document.getElementById("subject").textContent = subject;
+    document.getElementById("content").textContent = content;
+
+    let time = "";
+    if (timeType === "custom" && customTime) {
+      time = new Date(customTime).toLocaleString();
+    } else {
+      time = new Date().toLocaleString();
+    }
+    document.getElementById("time").textContent = time;
+
+    if (attachment && attachment.trim() !== "") {
+      document.getElementById("attachment").style.display = "block";
+      document.getElementById("attachmentName").textContent = attachment;
+    }
+
+    if (isReply === "yes" && originalEmail) {
+      document.getElementById("replyBox").style.display = "block";
+      document.getElementById("replyBox").textContent = originalEmail;
+    }
+  </script>
+</body>
+</html>
